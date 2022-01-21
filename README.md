@@ -5,4 +5,4 @@ This game uses [Tailwind CSS](https://tailwindcss.com/)
 
 ## Preview
 
-Preview the example live ot [Wordle]()
+Preview the example live ot [Wordle](https://wordle-topaz.vercel.app/)
