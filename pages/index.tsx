@@ -1,5 +1,28 @@
 import Head from 'next/head'
 
+const svg = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="24"
+    viewBox="0 0 24 24"
+    width="24"
+  >
+    <path
+      fill="var(--color-tone-1)"
+      d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"
+    ></path>
+  </svg>
+)
+
+const qwerty = 'qwertyuiopasdfghjklzxcvbnm'.split('')
+const topRow = qwerty.slice(0, 9)
+const middleRow = qwerty.slice(9, 18)
+const bottomRow = ['Enter', ...qwerty.slice(18), svg]
+const keyboard = [topRow, middleRow, bottomRow]
+
+const generateRow = () => Array(5).fill(null)
+const board = Array(6).fill(generateRow())
+
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -7,75 +30,41 @@ export default function Home() {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <header className="flex items-center justify-center w-full text-center max-w-lg h-12 border-b-2 border-gray-300">
+        <div className="text-4xl">Wordle</div>
+      </header>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <main className="flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
+        <div
+          id="board"
+          className="w-[350px] h-[420px] p-[10px] grid grid-rows-6 gap-[5px]"
+        >
+          {board.map(row => (
+            <div className="row grid grid-cols-5 gap-[5px] font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
+              {row.map((_: any) => (
+                <div className="tile border-2 border-gray-300"></div>
+              ))}
+            </div>
+          ))}
         </div>
       </main>
 
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
-        </a>
+      <footer className="m-h-[200px] flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
+        {keyboard.map(row => (
+          <div className="row mb-2 touch-manipulation mr-auto flex w-full">
+            {row.map(col => (
+              <button
+                className={`bg-gray-300 h-[58px] mr-[6px] flex  items-center justify-center rounded ${
+                  col === 'Enter' || typeof col !== 'string'
+                    ? 'flex-[1.5] text-sm'
+                    : 'flex-1'
+                }`}
+              >
+                {col}
+              </button>
+            ))}
+          </div>
+        ))}
       </footer>
     </div>
   )
