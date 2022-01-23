@@ -1,7 +1,14 @@
 import React from 'react'
+import {Tile} from '../../pages'
 
 interface Props {
   board: any[]
+}
+
+const BG_COLOR = {
+  NO_MATCH: 'bg-gray-400',
+  PARTIAL_MATCH: 'bg-yellow-400',
+  PERFECT_MATCH: 'bg-green-400',
 }
 
 const Board = ({board}: Props) => {
@@ -16,16 +23,21 @@ const Board = ({board}: Props) => {
             key={`row-${i}`}
             className="row grid grid-cols-5 gap-[5px] font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg"
           >
-            {row.map((letter: string | null, i) => (
-              <div
-                key={`col-${i}`}
-                className={`tile flex items-center justify-center text-5xl ${
-                  letter ? 'bg-gray-500' : 'border-2 border-gray-300'
-                } `}
-              >
-                {letter?.toUpperCase()}
-              </div>
-            ))}
+            {row.map(({letter, match}: Tile, i) => {
+              const testedForMatch = typeof match === 'string'
+              const fontColor = testedForMatch ? 'text-white' : 'text-black'
+              const border = testedForMatch ? '' : 'border-2 border-gray-300'
+              // @ts-expect-error
+              const backgroundColor = testedForMatch ? BG_COLOR[match] : ''
+              return (
+                <div
+                  key={`col-${i}`}
+                  className={`tile flex items-center justify-center text-4xl  ${fontColor} ${border} ${backgroundColor}`}
+                >
+                  {letter?.toUpperCase()}
+                </div>
+              )
+            })}
           </div>
         ))}
       </div>

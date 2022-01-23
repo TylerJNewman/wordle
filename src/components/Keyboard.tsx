@@ -12,18 +12,20 @@ const Keyboard = ({keyboard}: Props) => {
           key={`row-${i}`}
           className="row mb-2 touch-manipulation mr-auto flex w-full"
         >
-          {row.map((col, i) => (
-            <button
-              key={`col-${i}`}
-              className={`bg-gray-300 h-[58px] mr-[6px] flex  items-center justify-center rounded ${
-                col === 'Enter' || typeof col !== 'string'
-                  ? 'flex-[1.5] text-sm'
-                  : 'flex-1'
-              }`}
-            >
-              {col}
-            </button>
-          ))}
+          {row.map((col, i) => {
+            return (
+              <button
+                key={`col-${i}`}
+                className={`bg-gray-300 h-[58px] mr-[6px] flex  items-center justify-center rounded ${
+                  col === 'Enter' || typeof col !== 'string'
+                    ? 'flex-[1.5] text-sm'
+                    : 'flex-1'
+                }`}
+              >
+                {col}
+              </button>
+            )
+          })}
         </div>
       ))}
     </div>

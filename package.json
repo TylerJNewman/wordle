@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "next": "latest",
+    "popular-english-words": "^1.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rooks": "^5.9.0",
