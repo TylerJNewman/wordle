@@ -191,27 +191,29 @@ export default function Home() {
   }
 
   return (
-    <Layout>
-      <Board board={board} />
-      <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
-      <Modal
-        onClose={handleModalClose}
-        isOpen={modalIsOpen}
-        message={isWin ? <SuccessContent /> : <LossContent />}
-      />
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        containerStyle={{top: 100}}
-        toastOptions={{
-          // Define default options
-          className: '',
-          duration: 700,
-        }}
-      />
-      <Overlay onClose={handleOverlayClose} isOpen={overlayIsOpen} />
-    </Layout>
+    <>
+      <Layout>
+        <Board board={board} />
+        <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
+        <Modal
+          onClose={handleModalClose}
+          isOpen={modalIsOpen}
+          message={isWin ? <SuccessContent /> : <LossContent />}
+        />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{top: 100}}
+          toastOptions={{
+            // Define default options
+            className: '',
+            duration: 700,
+          }}
+        />
+        <Overlay onClose={handleOverlayClose} isOpen={overlayIsOpen} />
+      </Layout>
+    </>
   )
 }
