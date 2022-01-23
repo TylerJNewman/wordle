@@ -1,4 +1,5 @@
 import {useKey} from 'rooks'
+import toast, {Toaster} from 'react-hot-toast'
 
 import Board from 'components/Board'
 import Keyboard from 'components/Keyboard'
@@ -6,6 +7,8 @@ import Layout from 'components/Layout'
 import {useEffect, useState} from 'react'
 // @ts-expect-error
 import {words} from 'popular-english-words'
+import Modal from 'components/Modal'
+import throttle from 'utils/throttle'
 const {getWordAtPosition, getWordRank} = words
 
 const randomIntegerInRange = (min: number, max: number) =>
@@ -23,6 +26,7 @@ const getWord = () => {
 
 const deleteSvg = <img src="/delete.svg" alt="delete icon" />
 const qwerty = 'qwertyuiopasdfghjklzxcvbnm'.split('')
+const uppercaseQwerty = 'qwertyuiopasdfghjklzxcvbnm'.toUpperCase().split('')
 const topRow = qwerty.slice(0, 9)
 const middleRow = qwerty.slice(9, 18)
 const bottomRow = ['Enter', ...qwerty.slice(18), deleteSvg]
@@ -35,11 +39,17 @@ export interface Tile {
   match: string | null
 }
 
+interface MatchType {
+  [type: string]: string
+}
+
 export default function Home() {
   const [wordle, setWordle] = useState('')
   const [word, setWord] = useState('')
   const [board, setBoard] = useState(initialBoard)
   const [rowIndex, setRowIndex] = useState(0)
+  const [displayModal, setDisplayModal] = useState(false)
+  const [matchTypes, setMatchTypes] = useState<MatchType>({})
 
   useEffect(() => {
     setWordle(getWord())
@@ -47,6 +57,11 @@ export default function Home() {
 
   const incrementRow = () => setRowIndex(rowIndex + 1)
   const clearWord = () => setWord('')
+  const openModal = () => setDisplayModal(true)
+  const closeModal = () => setDisplayModal(false)
+
+  const wordIsCorrect = word === wordle
+  const gameIsLost = !wordIsCorrect && rowIndex === 5
 
   const addLetter = ({key}: {key: string}) => {
     if (word.length < 5) {
@@ -73,15 +88,31 @@ export default function Home() {
     setBoard(newBoard)
   }
 
+  const notify = throttle(() => toast('Not in the word list'))
+
   const checkWord = () => {
     if (word.length < 5) return
-    if (word === wordle) alert('congrats')
+    if (getWordRank(word) === -1) {
+      notify()
+      return
+    }
+    if (wordIsCorrect || gameIsLost) {
+      openModal()
+      setBoard(initialBoard)
+      clearWord()
+      return
+    }
     const newBoard = [...board]
+    let _matchTypes = {...matchTypes}
     const updatedRow = board[rowIndex].map(({letter}: Tile, i: number) => {
       const index = wordle.indexOf(letter as string)
       let match = 'NO_MATCH'
       if (index >= 0) match = 'PARTIAL_MATCH'
       if (index === i) match = 'PERFECT_MATCH'
+      if (letter) {
+        _matchTypes[letter.toLowerCase()] = match
+      }
+      setMatchTypes(_matchTypes)
       return {letter, match}
     })
     newBoard[rowIndex] = updatedRow
@@ -90,16 +121,59 @@ export default function Home() {
     incrementRow()
   }
 
-  console.log(wordle)
-
-  useKey(qwerty, addLetter)
+  useKey([...qwerty, ...uppercaseQwerty], addLetter)
   useKey(['Backspace'], deleteLetter)
   useKey(['Enter'], checkWord)
+
+  console.log(wordle)
+
+  const SuccessContent = () => {
+    return (
+      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+        <div className="mt-2">
+          <p className="text-7xl text-blue-600">You win!!!</p>
+        </div>
+        <div className="mt-2">
+          <p className="text-7xl text-center text-gray-500">🥳🎉🎊</p>
+        </div>
+      </div>
+    )
+  }
+
+  const LossContent = () => {
+    return (
+      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+        <div className="mt-2">
+          <p className="text-7xl center text-blue-600">Game Over!!!</p>
+        </div>
+        <div className="mt-2">
+          <p className="text-7xl text-center text-gray-500">😔</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Layout>
       <Board board={board} />
-      <Keyboard keyboard={keyboard} />
+      <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
+      <Modal
+        onClose={closeModal}
+        isOpen={displayModal}
+        message={wordIsCorrect ? <SuccessContent /> : <LossContent />}
+      />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{top: 100}}
+        toastOptions={{
+          // Define default options
+          className: '',
+          duration: 700,
+        }}
+      />
     </Layout>
   )
 }
