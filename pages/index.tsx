@@ -24,6 +24,7 @@ const getWord = () => {
   }
 }
 
+const initialGameState = 'isPlaying'
 const deleteSvg = <img src="/delete.svg" alt="delete icon" />
 const qwerty = 'qwertyuiopasdfghjklzxcvbnm'.split('')
 const uppercaseQwerty = 'qwertyuiopasdfghjklzxcvbnm'.toUpperCase().split('')
@@ -50,6 +51,7 @@ export default function Home() {
   const [rowIndex, setRowIndex] = useState(0)
   const [displayModal, setDisplayModal] = useState(false)
   const [matchTypes, setMatchTypes] = useState<MatchType>({})
+  const [gameState, setGameState] = useState(initialGameState)
 
   useEffect(() => {
     setWordle(getWord())
@@ -59,9 +61,30 @@ export default function Home() {
   const clearWord = () => setWord('')
   const openModal = () => setDisplayModal(true)
   const closeModal = () => setDisplayModal(false)
+  const resetGameState = () => setGameState(initialGameState)
+  const resetGame = () => {
+    setBoard(initialBoard)
+    clearWord()
+    setRowIndex(0)
+    setMatchTypes({})
+    resetGameState()
+    setWordle(getWord())
+  }
 
-  const wordIsCorrect = word === wordle
-  const gameIsLost = !wordIsCorrect && rowIndex === 5
+  const handleClose = () => {
+    closeModal()
+    setTimeout(() => {
+      resetGame()
+    }, 1000)
+  }
+
+  const wordIsCorrect = wordle === word
+  const gameIsLost = rowIndex === 6 && !wordIsCorrect
+  const gameIsOver = wordIsCorrect || gameIsLost
+
+  const winGame = () => setGameState('win')
+
+  const isWin = gameState === 'win'
 
   const addLetter = ({key}: {key: string}) => {
     if (word.length < 5) {
@@ -96,12 +119,6 @@ export default function Home() {
       notify()
       return
     }
-    if (wordIsCorrect || gameIsLost) {
-      openModal()
-      setBoard(initialBoard)
-      clearWord()
-      return
-    }
     const newBoard = [...board]
     let _matchTypes = {...matchTypes}
     const updatedRow = board[rowIndex].map(({letter}: Tile, i: number) => {
@@ -119,6 +136,12 @@ export default function Home() {
     setBoard(newBoard)
     clearWord()
     incrementRow()
+
+    if (gameIsOver) {
+      if (wordIsCorrect) winGame()
+      openModal()
+      return
+    }
   }
 
   useKey([...qwerty, ...uppercaseQwerty], addLetter)
@@ -144,7 +167,12 @@ export default function Home() {
     return (
       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
         <div className="mt-2">
-          <p className="text-7xl center text-blue-600">Game Over!!!</p>
+          <p className="text-7xl text-center text-blue-600">Game Over!!!</p>
+        </div>
+        <div className="mt-2">
+          <p className="text-3xl text-center text-blue-600">
+            The word is {wordle}
+          </p>
         </div>
         <div className="mt-2">
           <p className="text-7xl text-center text-gray-500">😔</p>
@@ -158,9 +186,9 @@ export default function Home() {
       <Board board={board} />
       <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
       <Modal
-        onClose={closeModal}
+        onClose={handleClose}
         isOpen={displayModal}
-        message={wordIsCorrect ? <SuccessContent /> : <LossContent />}
+        message={isWin ? <SuccessContent /> : <LossContent />}
       />
       <Toaster
         position="top-center"
