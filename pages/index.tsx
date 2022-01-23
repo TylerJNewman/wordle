@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react'
 import {words} from 'popular-english-words'
 import Modal from 'components/Modal'
 import throttle from 'utils/throttle'
+import Overlay from 'components/Overlay'
 const {getWordAtPosition, getWordRank} = words
 
 const randomIntegerInRange = (min: number, max: number) =>
@@ -49,9 +50,10 @@ export default function Home() {
   const [word, setWord] = useState('')
   const [board, setBoard] = useState(initialBoard)
   const [rowIndex, setRowIndex] = useState(0)
-  const [displayModal, setDisplayModal] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
   const [matchTypes, setMatchTypes] = useState<MatchType>({})
   const [gameState, setGameState] = useState(initialGameState)
+  const [overlayIsOpen, setOverlayIsOpen] = useState(false)
 
   useEffect(() => {
     setWordle(getWord())
@@ -59,8 +61,10 @@ export default function Home() {
 
   const incrementRow = () => setRowIndex(rowIndex + 1)
   const clearWord = () => setWord('')
-  const openModal = () => setDisplayModal(true)
-  const closeModal = () => setDisplayModal(false)
+  const openModal = () => setModalIsOpen(true)
+  const closeModal = () => setModalIsOpen(false)
+  const openOverlay = () => setOverlayIsOpen(true)
+  const closeOverlay = () => setOverlayIsOpen(false)
   const resetGameState = () => setGameState(initialGameState)
   const resetGame = () => {
     setBoard(initialBoard)
@@ -71,11 +75,15 @@ export default function Home() {
     setWordle(getWord())
   }
 
-  const handleClose = () => {
+  const handleModalClose = () => {
     closeModal()
     setTimeout(() => {
       resetGame()
     }, 1000)
+  }
+
+  const handleOverlayClose = () => {
+    closeOverlay()
   }
 
   const wordIsCorrect = wordle === word
@@ -146,7 +154,8 @@ export default function Home() {
 
   useKey([...qwerty, ...uppercaseQwerty], addLetter)
   useKey(['Backspace'], deleteLetter)
-  useKey(['Enter'], checkWord)
+  // useKey(['Enter'], checkWord)
+  useKey(['Enter'], openOverlay)
 
   console.log(wordle)
 
@@ -186,8 +195,8 @@ export default function Home() {
       <Board board={board} />
       <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
       <Modal
-        onClose={handleClose}
-        isOpen={displayModal}
+        onClose={handleModalClose}
+        isOpen={modalIsOpen}
         message={isWin ? <SuccessContent /> : <LossContent />}
       />
       <Toaster
@@ -202,6 +211,7 @@ export default function Home() {
           duration: 700,
         }}
       />
+      <Overlay onClose={handleOverlayClose} isOpen={overlayIsOpen} />
     </Layout>
   )
 }

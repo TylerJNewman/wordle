@@ -8,10 +8,9 @@ interface Props {
 interface Props {
   isOpen: boolean | null
   onClose: () => void
-  message: string | React.ReactNode
 }
 
-export default function Modal({isOpen, onClose, message}: Props) {
+function Overlay({isOpen, onClose}: Props) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -67,7 +66,7 @@ export default function Modal({isOpen, onClose, message}: Props) {
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start flex justify-center">
-                  {message}
+                  hello
                 </div>
               </div>
               <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
@@ -86,3 +85,5 @@ export default function Modal({isOpen, onClose, message}: Props) {
     </Transition.Root>
   )
 }
+
+export default Overlay
