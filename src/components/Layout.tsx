@@ -13,7 +13,7 @@ const Layout = ({children}: Props) => {
         <title>{siteTitle}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="flex items-center justify-center w-full text-center max-w-lg h-12 border-b-2 border-gray-300">
+      <header className="flex items-center justify-center w-full text-center max-w-lg h-12 border-b border-gray-300">
         <div className="text-4xl">{siteTitle}</div>
       </header>
       {children}

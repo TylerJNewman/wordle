@@ -10,28 +10,24 @@ interface EscapeButtonProps {
   handleClose: () => void
 }
 
-const EscapeButton = ({handleClose}: EscapeButtonProps) => (
-  <div
-    onClick={handleClose}
-    className="modal-close cursor-pointer flex flex-col items-center"
-  >
-    <svg
-      className="fill-current text-black"
-      xmlns="http://www.w3.org/2000/svg"
-      width={18}
-      height={18}
-      viewBox="0 0 18 18"
-    >
-      <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
-    </svg>
-  </div>
-)
-
 const Header = ({handleClose}: EscapeButtonProps) => (
   <header className="flex justify-between w-full text-center max-w-lg h-12 items-center">
     <div className="spacer" />
-    <div className="text font-bold">Settings</div>
-    <EscapeButton handleClose={handleClose} />
+    <div className="text font-bold">How To Play</div>
+    <div
+      onClick={handleClose}
+      className="modal-close cursor-pointer flex flex-col items-center"
+    >
+      <svg
+        className="fill-current text-black"
+        xmlns="http://www.w3.org/2000/svg"
+        width={18}
+        height={18}
+        viewBox="0 0 18 18"
+      >
+        <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
+      </svg>
+    </div>
   </header>
 )
 
@@ -60,8 +56,21 @@ function Overlay({isOpen, onClose}: Props) {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <div className="fixed inset-0 bg-white flex justify-center">
+      <div className="fixed inset-0 bg-white flex  flex-col items-center">
         <Header handleClose={handleClose} />
+        <div className="w-full border-b border-gray-300 max-w-lg content-between space-y-4 pb-4">
+          <p> Guess the WORDLE in 6 tries.</p>
+
+          <p>
+            Each guess must be a valid 5 letter word. Hit the enter button to
+            submit.
+          </p>
+
+          <p>
+            After each guess, the color of the tiles will change to show how
+            close your guess was to the word.
+          </p>
+        </div>
       </div>
     </Transition>
   )
