@@ -9,7 +9,6 @@ import {useEffect, useState} from 'react'
 import {words} from 'popular-english-words'
 import Modal from 'components/Modal'
 import throttle from 'utils/throttle'
-import Overlay from 'components/Overlay'
 const {getWordAtPosition, getWordRank} = words
 
 const randomIntegerInRange = (min: number, max: number) =>
@@ -53,7 +52,6 @@ export default function Home() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [matchTypes, setMatchTypes] = useState<MatchType>({})
   const [gameState, setGameState] = useState(initialGameState)
-  const [overlayIsOpen, setOverlayIsOpen] = useState(false)
 
   useEffect(() => {
     setWordle(getWord())
@@ -63,8 +61,6 @@ export default function Home() {
   const clearWord = () => setWord('')
   const openModal = () => setModalIsOpen(true)
   const closeModal = () => setModalIsOpen(false)
-  const openOverlay = () => setOverlayIsOpen(true)
-  const closeOverlay = () => setOverlayIsOpen(false)
   const resetGameState = () => setGameState(initialGameState)
   const resetGame = () => {
     setBoard(initialBoard)
@@ -80,10 +76,6 @@ export default function Home() {
     setTimeout(() => {
       resetGame()
     }, 1000)
-  }
-
-  const handleOverlayClose = () => {
-    closeOverlay()
   }
 
   const wordIsCorrect = wordle === word
@@ -154,10 +146,7 @@ export default function Home() {
 
   useKey([...qwerty, ...uppercaseQwerty], addLetter)
   useKey(['Backspace'], deleteLetter)
-  // useKey(['Enter'], checkWord)
-  useKey(['Enter'], openOverlay)
-
-  console.log(wordle)
+  useKey(['Enter'], checkWord)
 
   const SuccessContent = () => {
     return (
@@ -212,7 +201,6 @@ export default function Home() {
             duration: 700,
           }}
         />
-        <Overlay onClose={handleOverlayClose} isOpen={overlayIsOpen} />
       </Layout>
     </>
   )
