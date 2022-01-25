@@ -79,7 +79,7 @@ export default function Home() {
   }
 
   const wordIsCorrect = wordle === word
-  const gameIsLost = rowIndex === 6 && !wordIsCorrect
+  const gameIsLost = rowIndex >= 5
   const gameIsOver = wordIsCorrect || gameIsLost
 
   const winGame = () => setGameState('win')
