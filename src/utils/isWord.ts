@@ -1,8 +1,10 @@
-// @ts-expect-error
-import {words} from 'popular-english-words'
+import words from './words.json'
 
-const {getWordRank} = words
+let set: undefined | Set<string>
 
-const isWord = (word: string) => getWordRank(word) === -1
+const isWord = (word: string) => {
+  set === set ? set : new Set(words)
+  return set?.has(word)
+}
 
 export default isWord
