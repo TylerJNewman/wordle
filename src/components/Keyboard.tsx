@@ -3,6 +3,9 @@ import React from 'react'
 interface Props {
   keyboard: any[][]
   matchTypes: any
+  addLetter: ({key}: {key: string}) => void
+  deleteLetter: () => void
+  checkWord: () => void
 }
 
 const BG_COLOR = {
@@ -11,7 +14,13 @@ const BG_COLOR = {
   PERFECT_MATCH: 'bg-green-400',
 }
 
-const Keyboard = ({keyboard, matchTypes}: Props) => {
+const Keyboard = ({
+  keyboard,
+  matchTypes,
+  addLetter,
+  deleteLetter,
+  checkWord,
+}: Props) => {
   return (
     <div className="m-h-[200px] flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
       {keyboard.map((row, i) => (

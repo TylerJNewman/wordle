@@ -5,24 +5,12 @@ import Board from 'components/Board'
 import Keyboard from 'components/Keyboard'
 import Layout from 'components/Layout'
 import {useEffect, useState} from 'react'
-// @ts-expect-error
-import {words} from 'popular-english-words'
 import Modal from 'components/Modal'
 import throttle from 'utils/throttle'
-const {getWordAtPosition, getWordRank} = words
-
-const randomIntegerInRange = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min
-
-const getWord = () => {
-  while (true) {
-    let number = randomIntegerInRange(500, 1000)
-    let word = getWordAtPosition(number)
-    if (word.length === 5) {
-      return word
-    }
-  }
-}
+import isWord from 'utils/isWord'
+import getWord from 'utils/getWord'
+import SuccessContent from 'components/SuccessContent'
+import LossContent from 'components/LossContext'
 
 const initialGameState = 'isPlaying'
 const deleteSvg = <img src="/delete.svg" alt="delete icon" />
@@ -115,7 +103,7 @@ export default function Home() {
 
   const checkWord = () => {
     if (word.length < 5) return
-    if (getWordRank(word) === -1) {
+    if (isWord(word)) {
       notify()
       return
     }
@@ -148,46 +136,21 @@ export default function Home() {
   useKey(['Backspace'], deleteLetter)
   useKey(['Enter'], checkWord)
 
-  const SuccessContent = () => {
-    return (
-      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-        <div className="mt-2">
-          <p className="text-7xl text-blue-600">You win!!!</p>
-        </div>
-        <div className="mt-2">
-          <p className="text-7xl text-center text-gray-500">🥳🎉🎊</p>
-        </div>
-      </div>
-    )
-  }
-
-  const LossContent = () => {
-    return (
-      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-        <div className="mt-2">
-          <p className="text-7xl text-center text-blue-600">Game Over!!!</p>
-        </div>
-        <div className="mt-2">
-          <p className="text-3xl text-center text-blue-600">
-            The word is {wordle}
-          </p>
-        </div>
-        <div className="mt-2">
-          <p className="text-7xl text-center text-gray-500">😔</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <>
       <Layout>
         <Board board={board} />
-        <Keyboard keyboard={keyboard} matchTypes={matchTypes} />
+        <Keyboard
+          keyboard={keyboard}
+          matchTypes={matchTypes}
+          addLetter={addLetter}
+          deleteLetter={deleteLetter}
+          checkWord={checkWord}
+        />
         <Modal
           onClose={handleModalClose}
           isOpen={modalIsOpen}
-          message={isWin ? <SuccessContent /> : <LossContent />}
+          message={isWin ? <SuccessContent /> : <LossContent wordle={wordle} />}
         />
         <Toaster
           position="top-center"
@@ -195,11 +158,7 @@ export default function Home() {
           gutter={8}
           containerClassName=""
           containerStyle={{top: 100}}
-          toastOptions={{
-            // Define default options
-            className: '',
-            duration: 700,
-          }}
+          toastOptions={{duration: 700}}
         />
       </Layout>
     </>
