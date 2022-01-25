@@ -14,6 +14,9 @@ const BG_COLOR = {
   PERFECT_MATCH: 'bg-green-400',
 }
 
+const isBackspace = (key: string) => typeof key !== 'string'
+const isEnter = (key: string) => key === 'Enter'
+
 const Keyboard = ({
   keyboard,
   matchTypes,
@@ -21,6 +24,19 @@ const Keyboard = ({
   deleteLetter,
   checkWord,
 }: Props) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    // @ts-expect-error
+    const value = event.target.innerText
+    debugger
+    if (isEnter(value)) {
+      checkWord()
+    } else if (isBackspace(value)) {
+      deleteLetter()
+    } else {
+      addLetter({key: value})
+    }
+  }
+
   return (
     <div className="m-h-[200px] flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
       {keyboard.map((row, i) => (
@@ -33,14 +49,13 @@ const Keyboard = ({
             // @ts-expect-error
             const backgroundColor = BG_COLOR[matchType] ?? 'bg-gray-300'
             const size =
-              key === 'Enter' || typeof key !== 'string'
-                ? 'flex-[1.5] text-sm'
-                : 'flex-1'
+              isEnter(key) || isBackspace(key) ? 'flex-[1.5] text-sm' : 'flex-1'
 
             return (
               <button
                 key={`col-${i}`}
-                className={`${backgroundColor} h-[58px] mr-[6px] flex  items-center justify-center rounded ${size}`}
+                onClick={handleClick}
+                className={`${backgroundColor} h-[58px] mr-[6px] flex items-center justify-center rounded ${size}`}
               >
                 {key}
               </button>
