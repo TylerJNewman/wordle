@@ -103,7 +103,7 @@ export default function Home() {
 
   const checkWord = () => {
     if (word.length < 5) return
-    if (isWord(word)) {
+    if (!isWord(word)) {
       notify()
       return
     }
