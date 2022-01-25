@@ -14,7 +14,7 @@ const BG_COLOR = {
   PERFECT_MATCH: 'bg-green-400',
 }
 
-const isBackspace = (key: string) => typeof key !== 'string'
+const isBackspace = (key: string) => typeof key !== 'string' || key === ''
 const isEnter = (key: string) => key === 'Enter'
 
 const Keyboard = ({
@@ -27,7 +27,6 @@ const Keyboard = ({
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     // @ts-expect-error
     const value = event.target.innerText
-    debugger
     if (isEnter(value)) {
       checkWord()
     } else if (isBackspace(value)) {
