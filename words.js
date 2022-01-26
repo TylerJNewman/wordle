@@ -5,9 +5,7 @@ try {
   const array = data
     .split('\n')
     .filter(word => word.length === 5)
-    .filter(
-      word => !word.split('').some(x => x === '-' || x === '.' || x === "'"),
-    )
+    .map(x => x.toLowerCase())
   fs.writeFileSync('./words.json', JSON.stringify(array))
   console.log(data)
 } catch (err) {
