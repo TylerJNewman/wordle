@@ -38,30 +38,34 @@ const Keyboard = ({
 
   return (
     <div className="m-h-[200px] flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
-      {keyboard.map((row, i) => (
-        <div
-          key={`row-${i}`}
-          className="row mb-2 touch-manipulation mr-auto flex w-full"
-        >
-          {row.map((key, i) => {
-            const matchType = matchTypes[key] ?? ''
-            // @ts-expect-error
-            const backgroundColor = BG_COLOR[matchType] ?? 'bg-gray-300'
-            const size =
-              isEnter(key) || isBackspace(key) ? 'flex-[1.5] text-sm' : 'flex-1'
+      <div className="flex flex-col items-center justify-center w-full flex-1 ml-3">
+        {keyboard.map((row, i) => (
+          <div
+            key={`row-${i}`}
+            className="row mb-2 touch-manipulation mr-auto flex w-full"
+          >
+            {row.map((key, i) => {
+              const matchType = matchTypes[key] ?? ''
+              // @ts-expect-error
+              const backgroundColor = BG_COLOR[matchType] ?? 'bg-gray-300'
+              const size =
+                isEnter(key) || isBackspace(key)
+                  ? 'flex-[1.5] text-sm'
+                  : 'flex-1'
 
-            return (
-              <button
-                key={`col-${i}`}
-                onClick={handleClick}
-                className={`${backgroundColor} h-[58px] mr-[6px] flex items-center justify-center rounded ${size}`}
-              >
-                {key}
-              </button>
-            )
-          })}
-        </div>
-      ))}
+              return (
+                <button
+                  key={`col-${i}`}
+                  onClick={handleClick}
+                  className={`${backgroundColor} h-[58px] mr-[6px] flex items-center justify-center rounded ${size}`}
+                >
+                  {key}
+                </button>
+              )
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
