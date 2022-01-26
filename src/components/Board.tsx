@@ -11,12 +11,15 @@ const BG_COLOR = {
   PERFECT_MATCH: 'bg-green-400',
 }
 
+// width: 100vw; 420
+// height: 120vw; 350  w-[350px] h-[420px]
+
 const Board = ({board}: Props) => {
   return (
     <div className="flex flex-col items-center justify-center w-full flex-1 text-center max-w-lg">
       <div
         id="board"
-        className="w-[350px] h-[420px] p-[10px] grid grid-rows-6 gap-[5px]"
+        className="w-[100vw] h-[120vw] xs:w-[350px] xs:h-[420px] p-[10px] grid grid-rows-6 gap-[5px]"
       >
         {board.map((row: any[], i) => (
           <div
