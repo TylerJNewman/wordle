@@ -42,7 +42,7 @@ export default function Home() {
   const [gameState, setGameState] = useState(initialGameState)
 
   useEffect(() => {
-    setWordle('livid')
+    setWordle(getWord())
   }, [])
 
   const incrementRow = () => setRowIndex(rowIndex + 1)
