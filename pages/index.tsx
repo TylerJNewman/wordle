@@ -42,7 +42,7 @@ export default function Home() {
   const [gameState, setGameState] = useState(initialGameState)
 
   useEffect(() => {
-    setWordle(getWord())
+    setWordle('livid')
   }, [])
 
   const incrementRow = () => setRowIndex(rowIndex + 1)
@@ -113,7 +113,7 @@ export default function Home() {
       const index = wordle.indexOf(letter as string)
       let match = 'NO_MATCH'
       if (index >= 0) match = 'PARTIAL_MATCH'
-      if (index === i) match = 'PERFECT_MATCH'
+      if (wordle[i] === letter) match = 'PERFECT_MATCH'
       if (letter) {
         _matchTypes[letter.toLowerCase()] = match
       }
