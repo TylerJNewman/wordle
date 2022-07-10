@@ -66,7 +66,7 @@ export default function Home() {
     }, 1000)
   }
 
-  const wordIsCorrect = wordle === word
+  const wordIsCorrect = wordle.toLowerCase() === word.toLowerCase()
   const gameIsLost = rowIndex >= 5
   const gameIsOver = wordIsCorrect || gameIsLost
 
